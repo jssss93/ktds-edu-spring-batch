@@ -22,7 +22,7 @@ public class sample23JobConfiguration {
     private final PlatformTransactionManager transactionManager;
     private final JobRepository jobRepository;
     @Bean
-    public Job job(JobRepository jobRepository) {
+    public Job sample23_job(JobRepository jobRepository) {
         return new JobBuilder("sample23", jobRepository)
                 .start(splitFlow())
                 .next(sample23_step4())
@@ -31,21 +31,21 @@ public class sample23JobConfiguration {
     }
     @Bean
     public Flow splitFlow() {
-        return new FlowBuilder<SimpleFlow>("splitFlow")
+        return new FlowBuilder<SimpleFlow>("sample23_splitFlow")
                 .split(sample23_taskExecutor())
-                .add(flow1(), flow2())
+                .add(sample23_flow1(), sample23_flow2())
                 .build();
     }
     @Bean
-    public Flow flow1() {
-        return new FlowBuilder<SimpleFlow>("flow1")
+    public Flow sample23_flow1() {
+        return new FlowBuilder<SimpleFlow>("sample23_flow1")
                 .start(sample23_step1())
                 .next(sample23_step2())
                 .build();
     }
     @Bean
-    public Flow flow2() {
-        return new FlowBuilder<SimpleFlow>("flow2")
+    public Flow sample23_flow2() {
+        return new FlowBuilder<SimpleFlow>("sample23_flow2")
                 .start(sample23_step3())
                 .build();
     }

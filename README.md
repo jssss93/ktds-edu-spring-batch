@@ -1,10 +1,10 @@
 
 # ktds-edu-batch
-Spring Batch 개발 및 Airflow를 통한 워크플로우 자동화
+Spring Batch 개발 및 클라우드 전개전략
 
 
 
-# Spring Batch 개발 및 Airflow를 통한 워크플로우 자동화
+# Spring Batch 개발 및 클라우드 전개전략
 
 
 
@@ -16,7 +16,6 @@ Spring Batch 개발 및 Airflow를 통한 워크플로우 자동화
 - Lombok
 - WSL2
 - Mysql WorkBench
-- Helm
 
 
 # 2. Spring Batch ( [문서 보기](./SpringBatch.md) )
@@ -35,22 +34,15 @@ Spring Batch 개발 및 Airflow를 통한 워크플로우 자동화
   - Listener
   - Repeat
   - FaultTolerant
+  - Multi-Thread
 
 
-# 3. Airflow ( [문서 보기](./Airflow.md) )
+# 3. Batch 전개 전략 ( [문서 보기](./SpringBatch.md) )
 
-- Airflow 개요
-  - Airflow란?
-  - Airflow 아키텍처
-  - AIrflow 동작방식
-  - DAG 구성요소
-- Airflow 실습
-  - 사전준비
-  - Airflow 설치
-  - DAG Tutorial
-  - 다양한 Operator 사용하기
-  - Sensor
-  - X-COM
+- Batch 전략
+  - Online
+  - Online-Batch
+  - Batch
 
 
 
