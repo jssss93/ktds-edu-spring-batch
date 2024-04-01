@@ -65,10 +65,10 @@ public class Sample_04_JobConfiguration {
         return new StepBuilder("sample04_step2",jobRepository)
                 .tasklet((stepContribution, chunkContext) -> {
                     System.out.println("sample04_step2 completed");
-                    stepContribution.setExitStatus(ExitStatus.FAILED);
+                    stepContribution.setExitStatus(ExitStatus.COMPLETED);
                     return RepeatStatus.FINISHED;
                 },transactionManager)
-                .listener(new PassCheckListener()) // 리스너 추가
+                //.listener(new PassCheckListener()) // 리스너 추가
                 .build();
     }
 
@@ -79,7 +79,7 @@ public class Sample_04_JobConfiguration {
                     System.out.println("sample04_step3 completed");
                     return RepeatStatus.FINISHED;
                 },transactionManager)
-                .listener(new PassCheckListener()) // 리스너 추가
+                //.listener(new PassCheckListener()) // 리스너 추가
                 .build();
     }
 
@@ -90,7 +90,7 @@ public class Sample_04_JobConfiguration {
                     System.out.println("sample04_step4 completed");
                     return RepeatStatus.FINISHED;
                 },transactionManager)
-                .listener(new PassCheckListener()) // 리스너 추가
+                //.listener(new PassCheckListener()) // 리스너 추가
                 .build();
     }
 
@@ -101,7 +101,7 @@ public class Sample_04_JobConfiguration {
                     System.out.println("sample04_step5 completed");
                     return RepeatStatus.FINISHED;
                 },transactionManager)
-                .listener(new PassCheckListener()) // 리스너 추가
+                //.listener(new PassCheckListener()) // 리스너 추가
                 .build();
     }
 }

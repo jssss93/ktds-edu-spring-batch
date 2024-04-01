@@ -1,6 +1,5 @@
 package com.example.batch_01.sample10;
 
-import com.example.batch_01.sample09.CustomStepListener;
 import lombok.RequiredArgsConstructor;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
@@ -35,7 +34,7 @@ public class Sample_10_JobConfiguration {
                     System.out.println("sample10_step01 completed");
                     return RepeatStatus.FINISHED;
                 },transactionManager)
-                .listener(new CustomStepListener())
+                .listener(new CustomStepExecutionListener())
                 //.listener(new CustomStepAnnotationExecutionListener())
                 .build();
     }

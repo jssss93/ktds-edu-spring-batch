@@ -917,21 +917,21 @@ spring.batch.jdbc.initialize-schema = ALWAYS
 
 
 
-- enable
+- **spring.batch.job.enable**
   - 기본값은 true
   - false는 스프링이 자동으로 Job을 실행하는 것을 막습니다.
-- name
+- **spring.batch.job.name**
   - enable이 true일 때, 자동으로 전체 Job이 실행되는데 특정 Job만 실행하도록 하는 옵션입니다.
     - ex) --job.name=job1
     - job1만 실행하고 존재하지 않으면 실행하지 않습니다.
     - 만약 아무런 argument가 주입되지 않는다면 아무런 배치도 실행되지 않습니다.
-- initialize-schema
+- **spring.batch.jdbc.initialize-schema**
   - EMBEDDED : **내장 DB일 때만** 실행되며 스키마가 자동으로 생성(Default)
   - ALWAYS : 스크립트 항상 실행
   - NEVER
     - 스크립트 항상 실행 안하기 때문에 내장 DB일 경우 스크립트가 생성이 안되기 때문에 오류 발생
     - **운영에서는 수동으로 스크립트 생성 후 설정하는 것을 권장**
-- table-prefix
+- **spring.batch.jdbc.table-prefix**
   - 기본값은 BATCH_
   - 테이블의 앞의 문자를 변경하는 옵션입니다.
 
@@ -995,14 +995,14 @@ spring.batch.jdbc.initialize-schema = ALWAYS
 
 ```java
 public Job batchJob(){
-	return JobBuilder("batchJob", jobRepository) // Job생성을 위한 Builder, Job 이름과 jobRepository 를 매개변수로 받음
-			.start(Step)						 // 처음 실행 할 Step 설정, SimpleJobBuilder 반환
-			.next(Step)							 // 다음에 실행 할 Step 설정, 횟수제한없음 모든 next 가 종료되어야 Job 종료
-			.incrementer(JobParameterIncrementer)// JobParameter의 값을 자동증가하는 설정
-			.preventRestart(true)				 // Job의 재시작 가능 여부 설정 (Default:true)
-			.validator(JobParameterValidator)    // Job 실행 전 JobParameter가 올바르게 구성되어있는지 Check
-			.listener(JobExcitionListener)		 // Job 실행 전 후 로 동작하는Lisenter
-			.build();							 // 위 설정에따른 Job 생성
+	return JobBuilder("batchJob", jobRepository) 	// Job생성을 위한 Builder, Job 이름과 jobRepository 를 매개변수로 받음
+			.start(Step)						 									// 처음 실행 할 Step 설정, SimpleJobBuilder 반환
+			.next(Step)							 									// 다음에 실행 할 Step 설정, 횟수제한없음 모든 next 가 종료되어야 Job 종료
+			.incrementer(JobParameterIncrementer)			// JobParameter의 값을 자동증가하는 설정
+			.preventRestart(true)				 							// Job의 재시작 가능 여부 설정 (Default:true)
+			.validator(JobParameterValidator)    			// Job 실행 전 JobParameter가 올바르게 구성되어있는지 Check
+			.listener(JobExcitionListener)		 				// Job 실행 전 후 로 동작하는Lisenter
+			.build();							 										// 위 설정에따른 Job 생성
 }
 ```
 
@@ -1190,12 +1190,12 @@ public class CustomJobParametersIncrementor implements JobParametersIncrementer 
 
 ```java
 public Step batchStep(){
-	return StepBuilder("batchStep", jobRepository) //Step 생성을 위한 Build ,이름과 jobRepository 를 매개변수로 받음
-			.tasklet(Tasklet,TransactionManager)   //TaskletStepBuilder 반환 Tasklet,transactionManager 를 매개변수로 받음
-			.startLimit(10)						   // Step 실행횟수 설정, 설정만큼 실행되고 초과시 오류 발생
-			.allowStartIfComplete(true)			   // Step의 성공 실패와 관계없이 항상 Step 실행하기위한 설정
-			.listener(StepExecutionListener)       // Step 실행 전후에 동작 정의
-			.build();							   // TaskletStep 생성
+	return StepBuilder("batchStep", jobRepository) 	// Step 생성을 위한 Build ,이름과 jobRepository 를 매개변수로 받음
+			.tasklet(Tasklet,TransactionManager)   			// TaskletStepBuilder 반환 Tasklet,transactionManager 를 매개변수로 받음
+			.startLimit(10)						   								// Step 실행횟수 설정, 설정만큼 실행되고 초과시 오류 발생
+			.allowStartIfComplete(true)			  				 	// Step의 성공 실패와 관계없이 항상 Step 실행하기위한 설정
+			.listener(StepExecutionListener)       			// Step 실행 전후에 동작 정의
+			.build();							   										// TaskletStep 생성
 }
 ```
 
@@ -1444,8 +1444,10 @@ readerIsTransationalQueue() Deprecated in V5.0
 
 - 다양한 입력으로부터 데이터를 읽어서 제공하는 인터페이스입니다.
 
-  - 플랫 파일 - csv, txt
-  - XML, Json
+  - CSV
+  - TXT
+  - XML
+  - JSON
   - Database
   - Message Queuing 서비스
   - Custom reader
@@ -1474,8 +1476,10 @@ readerIsTransationalQueue() Deprecated in V5.0
 
 - Chunk 단위로 데이터를 받아 일괄 출력 작업을 위한 인터페이스입니다.
 
-  - 플랫 파일 - csv, txt
-  - XML, Jsono
+  - CSV
+  - TXT
+  - XML
+  - JSON
   - Database
   - Message Queuing 서비스
   - Mail Service
@@ -1546,13 +1550,9 @@ readerIsTransationalQueue() Deprecated in V5.0
 
 #### 2.5.5.15 . Page Size vs Chunk Size
 
-기존에 Spring Batch를 사용해보신 분들은 아마 PagingItemReader를 많이들 사용해보셨을 것입니다.
-PagingItemReader를 사용하신 분들 중 간혹 Page Size와 Chunk Size를 같은 의미로 오해하시는 분들이 계시는데요.
-**Page Size와 Chunk Size는 서로 의미하는 바가 다릅니다**.
+PagingItemReader를 사용하신 분들 중 간혹 Page Size와 Chunk Size를 같은 의미로 오해 할 수 있습니다
 
-**Chunk Size는 한번에 처리될 트랜잭션 단위**를 얘기하며, **Page Size는 한번에 조회할 Item의 양**을 얘기합니다.
-
-자 그럼 이제 2개가 어떻게 다른지 실제 Spring Batch의 ItemReader 코드를 직접 들여다보겠습니다.
+**Page Size와 Chunk Size는 서로 의미하는 바가 다릅니다**. **Chunk Size는 한번에 처리될 트랜잭션 단위**를 얘기하며, **Page Size는 한번에 조회할 Item의 양**을 얘기합니다.
 
 PagingItemReader의 부모 클래스인 `AbstractItemCountingItemStreamItemReader`의 `read()` 메소드를 먼저 보겠습니다.
 
@@ -1656,11 +1656,11 @@ public class Sample_03_JobConfiguration {
                 .job(childJob(jobRepository,step1(jobRepository,transactionManager)))
                 .launcher(jobLauncher)
                 .parametersExtractor(jobParametersExtractor())
-                // 리스너를 통해서 Step이 시작하기 전에 Step의 ExecutionContext에 name과 backtony 키밸류값 등록
+                // 리스너를 통해서 Step이 시작하기 전에 Step의 ExecutionContext에 name과 cjs 키밸류값 등록
                 .listener(new StepExecutionListener() {
                     @Override
                     public void beforeStep(StepExecution stepExecution) {
-                        stepExecution.getExecutionContext().putString("name", "backtony");
+                        stepExecution.getExecutionContext().putString("name", "cjs");
                     }
 
                     @Override
@@ -1776,7 +1776,6 @@ JobExecution과 StepExecution의 속성으로 Job과 Step의 실행 후 종료�
 
 #### 2.6.1.6 start(), next()
 
-![그림2](https://backtony.github.io/assets/img/post/spring/batch/5/5-2.PNG)
 start에는 Flow와 Step이 모두 올 수 있습니다.
 Flow가 오게 되면 jobFlowBuilder가 반환되고, Step이 오면 SimpleJobBuilder가 반환됩니다.
 하지만 simpleJobBuilder도 on을 지원하기 때문에 start에 step을 인자로 넣고 뒤에서 on을 사용하면 jobFlowBuilder가 반환됩니다.
@@ -2385,7 +2384,7 @@ public class Sample_06JobConfiguration {
 
 
 
-#### 2.6.2.5 Sample_07
+#### 2.6.2.4 Sample_07
 
 ```java
 @Configuration
@@ -2449,7 +2448,7 @@ public class Sample_07JobConfiguration {
 
 
 
-flow1에서 수행되는 step1의 ExitStatus를 FAILED처리 시켰고 이후 flow2가 수행됩니다.
+flow1에서 수행되는 step1의 ExitStatus를 **FAILED**처리 시켰고 이후 flow2가 수행됩니다.
 이때 JOB의 ExitStatus와 BatchStatus에 주목해야 합니다.
 Job의 BatchStatus는 COMPLETED이지만, ExitStatus는 FAILED입니다.
 이는 맨 앞쪽에서 step들끼리 on, to로 연결한 것과 다른 방식으로 업데이트 됩니다.
@@ -2760,7 +2759,6 @@ listener를 등록하는 방식은 인터페이스를 구현하거나 애노테�
 ```java
 package com.example.batch_01.sample10;
 
-import com.example.batch_01.sample09.CustomStepListener;
 import lombok.RequiredArgsConstructor;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
@@ -2795,7 +2793,7 @@ public class Sample_10_JobConfiguration {
                     System.out.println("sample10_step01 completed");
                     return RepeatStatus.FINISHED;
                 },transactionManager)
-                .listener(new CustomStepListener())
+                .listener(new CustomStepExecutionListener())
                 //.listener(new CustomStepAnnotationExecutionListener())
                 .build();
     }

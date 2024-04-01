@@ -33,11 +33,11 @@ public class Sample_03_JobConfiguration {
                 .job(childJob(jobRepository,step1(jobRepository,transactionManager)))
                 .launcher(jobLauncher)
                 .parametersExtractor(jobParametersExtractor())
-                // 리스너를 통해서 Step이 시작하기 전에 Step의 ExecutionContext에 name과 backtony 키밸류값 등록
+                // 리스너를 통해서 Step이 시작하기 전에 Step의 ExecutionContext에 name과 cjs 키밸류값 등록
                 .listener(new StepExecutionListener() {
                     @Override
                     public void beforeStep(StepExecution stepExecution) {
-                        stepExecution.getExecutionContext().putString("name", "backtony");
+                        stepExecution.getExecutionContext().putString("name", "cjs");
                     }
 
                     @Override
