@@ -4185,7 +4185,7 @@ retryTemplate을 직접 만들어서 원하는 세팅을 해주고, 만든 retry
 
 ------
 
-![그림1](SpringBatch 별첨.assets/11-1.png)
+![그림1](SpringBatch.assets/11-1.png)
 
 - 프로세스 내 특정 작업을 처리하는 스레드가 하나일 경우 단일 스레드, 여러 개일 경우 멀티 스레드라고 합니다.
 - 작업 처리에 있어서 단일 스레드와 멀티 스레드의 선택 기준은 어떤 방식이 자원을 효율적으로 사용하고 성능 처리에 유리한가 하는 점입니다.
@@ -4226,7 +4226,7 @@ retryTemplate을 직접 만들어서 원하는 세팅을 해주고, 만든 retry
 - 사용하려면 Spring-batch-integration 의존성이 필요합니다.
   - implementation ‘org.springframework.batch:spring-batch-integration’
 
-![그림3](SpringBatch 별첨.assets/11-3.png) ![그림2](SpringBatch 별첨.assets/11-2.png)
+![그림3](SpringBatch.assets/11-3.png) ![그림2](SpringBatch.assets/11-2.png)
 
 - AsyncItemProcessor는 ItemProcessor에 실제 작업을 위임합니다.
 - TaskExecutor로 비동기 실행을 하기 위한 스레드를 만들고 해당 스레드는 FutureTask를 실행합니다.
@@ -4235,7 +4235,7 @@ retryTemplate을 직접 만들어서 원하는 세팅을 해주고, 만든 retry
 
 
 
-![그림4](SpringBatch 별첨.assets/11-4.png)
+![그림4](SpringBatch.assets/11-4.png)
 
 1. Step 기본 설정
 2. 청크 개수 설정
@@ -4417,7 +4417,7 @@ Customer 데이터를 프로세서에서 Customer2객체로 전환하여 Writer�
 
 #### 2.10.4.1 동작방식
 
-![그림5](SpringBatch 별첨.assets/11-5.png)
+![그림5](SpringBatch.assets/11-5.png)
 
 - Step 내에서 멀티 스레드로 Chunk 기반 처리가 이뤄지는 구조 입니다.
 - TaskExecutorRepeatTemplate이 반복자로 사용되며 설정한 개수(throttleLimit)만큼의 스레드를 생성하여 수행합니다.
@@ -4542,12 +4542,12 @@ public class sample22JobConfiguration {
 
 #### 2.10.5.1 동작방식
 
-![그림6](SpringBatch 별첨.assets/11-6.png)
+![그림6](SpringBatch.assets/11-6.png)
 
 - SplitState를 사용해서 여러 개의 Flow들을 병렬적으로 실행하는 구조 입니다.
 - 실행이 다 완료된 후 FlowExecutionStatus 결과들을 취합해서 다음 단계를 결정합니다.
 
-![그림7](SpringBatch 별첨.assets/11-7.png)
+![그림7](SpringBatch.assets/11-7.png)
 
 1. flow 1 생성합니다.
 2. flow2와 flow3를 생성하고 앞선 1까지 총 3개의 flow를 합치고 taskExecutor에서는 flow 개수만큼 스레드를 생성해서 각 flow를 실행시킵니다.
@@ -4662,13 +4662,13 @@ public class sample23JobConfiguration {
 - SlaveStep은 ItemReader / ItemProcessor / ItemWriter 등을 갖고 동작하며 작업을 독립적으로 병렬 처리합니다.
 - MasterStep은 PartitionStep이며 SlaveStep은 TaskletStep, FlowStep 등이 올 수 있습니다.
 
-![그림8](SpringBatch 별첨.assets/11-8.png) MasterStep과 SlaveStep 둘다 Step인데 MasterStep에서 Partitioner가 grid Size만큼 StepExecution을 만들고 partitioner의 방식에 따라 StepExecution의 ExecutionContext 안에 **데이터 자체가 아닌 데이터 정보** 를 넣어둡니다.(예시를 보면 이해가 쉽습니다.) 그리고 gridSize만큼 스레드를 생성하여 SlaveStep을 각 스레드별로 실행합니다.
+![그림8](SpringBatch.assets/11-8.png) MasterStep과 SlaveStep 둘다 Step인데 MasterStep에서 Partitioner가 grid Size만큼 StepExecution을 만들고 partitioner의 방식에 따라 StepExecution의 ExecutionContext 안에 **데이터 자체가 아닌 데이터 정보** 를 넣어둡니다.(예시를 보면 이해가 쉽습니다.) 그리고 gridSize만큼 스레드를 생성하여 SlaveStep을 각 스레드별로 실행합니다.
 
-![그림9](SpringBatch 별첨.assets/11-9.png)
+![그림9](SpringBatch.assets/11-9.png)
 
 그림을 보면 알 수 있듯이, 각 스레드는 같은 SlaveStep을 실행하지만, 서로 다른 StepExecution 정보를 가지고 수행됩니다. Partitioning은 Scope를 지정하게 되는데 이에 따라 서로 같은 SlaveStep을 수행하게 되어 같은 프록시를 바라보지만 실제 실행할 때는 결과적으로 각 스레드마다 타겟 빈을 새로 만들기 때문에 서로 다른 타겟 빈을 바라보게 되어 동시성 이슈가 없습니다.
 
-![그림10](SpringBatch 별첨.assets/11-10.png)
+![그림10](SpringBatch.assets/11-10.png)
 
 1. step 기본 설정
 2. slaveStep에 적용할 Partitioner 설정
@@ -4901,7 +4901,11 @@ public JpaPagingItemReader<? extends Customer> customItemReader(
 
 ------
 
-![그림11](SpringBatch 별첨.assets/11-11.png) Thread-safe 하지 않은 ItemReader를 Thread-safe하게 처리하도록 하는 기능을 제공합니다. 단순히 Thread-safe하지 않은 ItemReader를 SynchronizedItemStreamReader로 한번 감싸주면 되기 때문에 적용 방식은 매우 간단합니다.
+![그림11](SpringBatch.assets/11-11.png)
+
+
+
+ Thread-safe 하지 않은 ItemReader를 Thread-safe하게 처리하도록 하는 기능을 제공합니다. 단순히 Thread-safe하지 않은 ItemReader를 SynchronizedItemStreamReader로 한번 감싸주면 되기 때문에 적용 방식은 매우 간단합니다.
 
 #### 예시
 
