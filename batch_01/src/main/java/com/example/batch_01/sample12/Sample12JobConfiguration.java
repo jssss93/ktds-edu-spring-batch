@@ -1,5 +1,11 @@
 package com.example.batch_01.sample12;
 
+import com.example.batch_01.sample01.UserItemProcessor;
+import com.example.batch_01.sample13.CustomException;
+import com.example.batch_01.sample16.SkippableException;
+import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
 import org.springframework.batch.core.job.builder.JobBuilder;
@@ -8,22 +14,12 @@ import org.springframework.batch.core.repository.JobRepository;
 import org.springframework.batch.core.step.builder.StepBuilder;
 import org.springframework.batch.item.ItemProcessor;
 import org.springframework.batch.item.ItemReader;
-import org.springframework.batch.repeat.RepeatCallback;
-import org.springframework.batch.repeat.RepeatContext;
 import org.springframework.batch.repeat.RepeatStatus;
 import org.springframework.batch.repeat.policy.SimpleCompletionPolicy;
 import org.springframework.batch.repeat.support.RepeatTemplate;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.transaction.PlatformTransactionManager;
-
-import com.example.batch_01.sample01.UserItemProcessor;
-import com.example.batch_01.sample13.CustomException;
-import com.example.batch_01.sample16.SkippableException;
-
-import lombok.RequiredArgsConstructor;
-import lombok.SneakyThrows;
-import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Configuration
@@ -75,12 +71,9 @@ public class Sample12JobConfiguration {
                         repeatTemplate.setCompletionPolicy(new SimpleCompletionPolicy(3));
                         // 3초 동안 item에 대해 processor 작업을 반복하는 방식
                         //repeatTemplate.setCompletionPolicy(new TimeoutTerminationPolicy(3000));
-                        repeatTemplate.iterate(new RepeatCallback() {
-                            @Override
-                            public RepeatStatus doInIteration(RepeatContext context) throws Exception {
-                                System.out.println(item + " repeat");
-                                return RepeatStatus.CONTINUABLE;
-                            }
+                        repeatTemplate.iterate(context -> {
+                            System.out.println(item + " repeat");
+                            return RepeatStatus.CONTINUABLE;
                         });
                         return item;
                     }

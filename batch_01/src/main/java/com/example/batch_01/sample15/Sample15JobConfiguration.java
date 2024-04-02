@@ -68,7 +68,7 @@ public class Sample15JobConfiguration {
     @Bean
     public ItemWriter<? super String> sample15_customItemWriter() {
         return items -> {
-        	System.out.println("writer");
+        	//System.out.println("writer");
             for (String item : items) {
                 if (item.equals("4")){
                     throw new CustomException("4");

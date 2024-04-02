@@ -3288,12 +3288,9 @@ public class Sample12JobConfiguration {
                         repeatTemplate.setCompletionPolicy(new SimpleCompletionPolicy(3));
                         // 3초 동안 item에 대해 processor 작업을 반복하는 방식
                         //repeatTemplate.setCompletionPolicy(new TimeoutTerminationPolicy(3000));
-                        repeatTemplate.iterate(new RepeatCallback() {
-                            @Override
-                            public RepeatStatus doInIteration(RepeatContext context) throws Exception {
-                                System.out.println(item + " repeat");
-                                return RepeatStatus.CONTINUABLE;
-                            }
+                        repeatTemplate.iterate(context -> {
+                            System.out.println(item + " repeat");
+                            return RepeatStatus.CONTINUABLE;
                         });
                         return item;
                     }
@@ -3545,7 +3542,7 @@ itemProcessor 2
 itemProcessor 4
 itemProcessor 5
 items = [1, 2, 4, 5]
-itemReader : 10
+itemReader : 6
 ```
 
 
@@ -3671,7 +3668,7 @@ itemReader : 6
 ### 2.9.3 Retry
 
 - ItemProcessor, ItemWriter에서 설정된 Exception이 발생했을 때, 지정한 정책에 따라 데이터 처리를 재시도하는 기능입니다.
-- ItemReader에서는 지원하지 않습니다.
+- **ItemReader에서는 지원하지 않습니다.**
 - 예외 발생 시 재시도 설정에 의해서 해당 Chunk의 처음부터 다시 시작합니다.
 - **Retry Count는 Item마다 각각 가지고 있습니다.**
 - RetryLimit 횟수 이후에도 재시도가 실패한다면 **recover** 에서 후속작업을 처리할 수 있습니다.
@@ -3914,19 +3911,88 @@ itemReader에서는 캐시한 데이터를 사용하기에 콘솔에 찍히지 �
 이때는 Skip과 함께 사용하면 됩니다.
 
 ```java
-@Bean
-public Step step1() {
-    return stepBuilderFactory.get("step")
-            .<String, String>chunk(chunkSize)
-            .reader(customItemReader())
-            .processor(customItemProcessor1())
-            .writer(customItemWriter())
-            .faultTolerant()
-            .retry(RetryableException.class)
-            .retryLimit(2)
-            .skip(RetryableException.class)
-            .skipLimit(2)
-            .build();
+package com.example.batch_01.sample18;
+
+import com.example.batch_01.sample16.RetryableException;
+import com.example.batch_01.sample16.SkippableException;
+import lombok.RequiredArgsConstructor;
+import org.springframework.batch.core.Job;
+import org.springframework.batch.core.Step;
+import org.springframework.batch.core.job.builder.JobBuilder;
+import org.springframework.batch.core.launch.support.RunIdIncrementer;
+import org.springframework.batch.core.repository.JobRepository;
+import org.springframework.batch.core.step.builder.StepBuilder;
+import org.springframework.batch.item.ItemProcessor;
+import org.springframework.batch.item.ItemReader;
+import org.springframework.batch.item.ItemWriter;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.transaction.PlatformTransactionManager;
+
+@Configuration
+@RequiredArgsConstructor
+public class sample18JobConfiguration {
+    private final PlatformTransactionManager transactionManager;
+    private final JobRepository jobRepository;
+    private int chunkSize = 5;
+
+    @Bean
+    public Job sample18() {
+        return new JobBuilder("sample18", jobRepository)
+                .start(sample18_step01())
+                .incrementer(new RunIdIncrementer())
+                .build();
+    }
+
+    @Bean
+    public Step sample18_step01() {
+        return new StepBuilder("sample18_step01",jobRepository)
+                .<String, String>chunk(chunkSize,transactionManager)
+                .reader(sample18_customItemReader())
+                .processor(sample18_customItemProcessor1())
+                .writer(sample18_customItemWriter())
+                .faultTolerant()
+                .retry(RetryableException.class)
+                .retryLimit(2)
+                .skip(RetryableException.class)
+                .skipLimit(2)
+                .build();
+    }
+
+    @Bean
+    public ItemReader<String> sample18_customItemReader() {
+        return new ItemReader<String>() {
+            int i = 0;
+
+            @Override
+            public String read() throws SkippableException {
+                i++;
+                System.out.println("itemReader : " + i);
+                return i > 5 ? null : String.valueOf(i);
+            }
+        };
+    }
+
+    @Bean
+    public ItemProcessor<? super String, String> sample18_customItemProcessor1() {
+        return item -> {
+
+
+            if (item.equals("4")) {
+                throw new RetryableException("Process Failed ");
+            }
+            System.out.println("itemProcessor : " + item);
+
+            return item;
+        };
+    }
+
+    @Bean
+    public ItemWriter<? super String> sample18_customItemWriter() {
+        return items -> {
+            System.out.println("items = " + items);
+        };
+    }
 }
 
 // 출력
@@ -3967,9 +4033,94 @@ recover코드로 진입하여 여기서 해당 item을 skip 처리하고 skipCou
 
 
 
-#### 2.9.3.7 Example20 : item마다 갖는 retry Count
+#### 2.9.3.7 Example19 : item마다 갖는 retry Count
 
 ```java
+package com.example.batch_01.sample19;
+
+import com.example.batch_01.sample16.RetryableException;
+import lombok.RequiredArgsConstructor;
+import org.springframework.batch.core.Job;
+import org.springframework.batch.core.Step;
+import org.springframework.batch.core.job.builder.JobBuilder;
+import org.springframework.batch.core.launch.support.RunIdIncrementer;
+import org.springframework.batch.core.repository.JobRepository;
+import org.springframework.batch.core.step.builder.StepBuilder;
+import org.springframework.batch.item.ItemProcessor;
+import org.springframework.batch.item.ItemReader;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.transaction.PlatformTransactionManager;
+
+@Configuration
+@RequiredArgsConstructor
+public class sample19JobConfiguration {
+    private final PlatformTransactionManager transactionManager;
+    private final JobRepository jobRepository;
+    private int chunkSize = 5;
+
+    @Bean
+    public Job sample19() {
+        return new JobBuilder("sample19", jobRepository)
+                .start(sample19_step01())
+                .incrementer(new RunIdIncrementer())
+                .build();
+    }
+
+    @Bean
+    public Step sample19_step01() {
+        return new StepBuilder("sample19_step01",jobRepository)
+                .<String, String>chunk(chunkSize,transactionManager)
+                .reader(sample19_customItemReader())
+                .processor(sample19_customItemProcessor1())
+                .writer(items -> System.out.println("items = " + items))
+                .faultTolerant()
+                .retry(RetryableException.class)
+                .retryLimit(2)
+                .skip(RetryableException.class)
+                .skipLimit(4)
+                .build();
+    }
+
+    @Bean
+    public ItemReader<String> sample19_customItemReader() {
+        return new ItemReader<String>() {
+            int i = 0;
+
+            @Override
+            public String read() throws RetryableException {
+                i++;
+                return i > 5 ? null : String.valueOf(i);
+            }
+        };
+    }
+
+    @Bean
+    public ItemProcessor<? super String, String> sample19_customItemProcessor1() {
+        return item -> {
+
+            if (item.equals("3")) {
+                System.out.println("itemProcessor : " + item);
+
+                return item;
+            }
+            throw new RetryableException("Process Failed ");
+        };
+    }
+}
+
+
+--------------------------------
+// 출력 결과
+itemProcessor : 3
+itemProcessor : 3
+itemProcessor : 3
+itemProcessor : 3
+itemProcessor : 3
+
+  
+  
+  
 @Configuration
 @RequiredArgsConstructor
 public class sample19JobConfiguration {
@@ -4125,7 +4276,7 @@ public class sample20JobConfiguration {
 }
 ------------------------------------------------------------------------------------
 @RequiredArgsConstructor
-public class CustomItemProcessor1 implements ItemProcessor<String, String> {
+public class CustomItemProcessor_20 implements ItemProcessor<String, String> {
     
     private final RetryTemplate retryTemplate;
 
