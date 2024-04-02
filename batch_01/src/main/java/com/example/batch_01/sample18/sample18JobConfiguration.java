@@ -5,6 +5,7 @@ import com.example.batch_01.sample16.SkippableException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
+import org.springframework.batch.core.configuration.annotation.JobScope;
 import org.springframework.batch.core.job.builder.JobBuilder;
 import org.springframework.batch.core.launch.support.RunIdIncrementer;
 import org.springframework.batch.core.repository.JobRepository;
@@ -47,6 +48,7 @@ public class sample18JobConfiguration {
     }
 
     @Bean
+    @JobScope
     public ItemReader<String> sample18_customItemReader() {
         return new ItemReader<String>() {
             int i = 0;
