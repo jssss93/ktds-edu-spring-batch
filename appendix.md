@@ -10,7 +10,7 @@ Chunk 단위로 트랜잭션을 수행하기 때문에 **실패할 경우엔 해
 
 Chunk 지향 처리가 결국 Chunk 단위로 데이터를 처리한다는 의미이기 때문에 그림으로 표현하면 아래와 같습니다.
 
-![chunk-process](SpringBatch 별첨.assets/999A513E5B814C4A12.png)
+![chunk-process](appendix.assets/999A513E5B814C4A12.png)
 
 - Reader에서 데이터를 하나 읽어옵니다
 - 읽어온 데이터를 Processor에서 가공합니다
@@ -40,27 +40,27 @@ for(int i=0; i<totalSize; i+=chunkSize){ // chunkSize 단위로 묶어서 처리
 Chunk 지향 처리의 전체 로직을 다루는 것은 `ChunkOrientedTasklet` 클래스입니다.
 클래스 이름만 봐도 어떤 일을 하는지 단번에 알 수 있을것 같습니다.
 
-![tasklet1](SpringBatch 별첨.assets/9903723A5B814C4D01.png)
+![tasklet1](appendix.assets/9903723A5B814C4D01.png)
 
 여기서 자세히 보셔야할 코드는 `execute()` 입니다.
 Chunk 단위로 작업하기 위한 전체 코드가 이곳에 있다고 보시면 되는데요.
 내부 코드는 아래와 같습니다.
 
-![tasklet2](SpringBatch 별첨.assets/99C279485B814C4D26.png)
+![tasklet2](appendix.assets/99C279485B814C4D26.png)
 
 - `chunkProvider.provide()`로 Reader에서 Chunk size만큼 데이터를 가져옵니다.
 - `chunkProcessor.process()` 에서 Reader로 받은 데이터를 가공(Processor)하고 저장(Writer)합니다.
 
 데이터를 가져오는 `chunkProvider.provide()`를 가보시면 어떻게 데이터를 가져오는지 알 수 있습니다.
 
-![tasklet3](SpringBatch 별첨.assets/9969C3335B814C4D2A.png)
+![tasklet3](appendix.assets/9969C3335B814C4D2A.png)
 
 `inputs`이 ChunkSize만큼 쌓일때까지 `read()`를 호출합니다.
 이 `read()` 는 내부를 보시면 실제로는 `ItemReader.read`를 호출합니다.
 
-![tasklet4](SpringBatch 별첨.assets/997C99365B814C4C24.png)
+![tasklet4](appendix.assets/997C99365B814C4C24.png)
 
-![tasklet5](SpringBatch 별첨.assets/992738395B814C4D34.png)
+![tasklet5](appendix.assets/992738395B814C4D34.png)
 
 즉, `ItemReader.read`에서 1건씩 데이터를 조회해 Chunk size만큼 데이터를 쌓는 것이 `provide()`가 하는 일입니다.
 
@@ -70,18 +70,18 @@ Chunk 단위로 작업하기 위한 전체 코드가 이곳에 있다고 보시�
 
 Processor와 Writer 로직을 담고 있는 것은 `ChunkProcessor` 가 담당하고 있습니다.
 
-![process0](SpringBatch 별첨.assets/999AC5365B814C4A37.png)
+![process0](appendix.assets/999AC5365B814C4A37.png)
 
 인터페이스이기 때문에 실제 구현체가 있어야 하는데요.
 기본적으로 사용되는 것이 `SimpleChunkProcessor` 입니다.
 
-![process1](SpringBatch 별첨.assets/99643D475B814C4D22.png)
+![process1](appendix.assets/99643D475B814C4D22.png)
 
 위 클래스를 보시면 Spring Batch에서 Chunk 단위 처리를 어떻게 하는지 아주 상세하게 확인할 수 있습니다.
 처리를 담당하는 핵심 로직은 `process()` 입니다.
 이 `process()`의 코드는 아래와 같습니다.
 
-![process2](SpringBatch 별첨.assets/99DE13375B814C4C36.png)
+![process2](appendix.assets/99DE13375B814C4C36.png)
 
 - ```
   Chunk<I> inputs
@@ -113,15 +113,15 @@ Processor와 Writer 로직을 담고 있는 것은 `ChunkProcessor` 가 담당�
 여기서 `transform()`은 반복문을 통해 `doProcess()`를 호출하는데요.
 해당 메소드는 ItemProcessor의 `process()`를 사용합니다.
 
-![process3](SpringBatch 별첨.assets/993725375B814C4D2F.png)
+![process3](appendix.assets/993725375B814C4D2F.png)
 
 `doProcess()` 를 처리하는데 만약 ItemProcessor가 없다면 item을 그대로 반환하고 있다면 ItemProcessor의 `process()`로 가공하여 반환합니다.
 
-![process4](SpringBatch 별첨.assets/9942063F5B814C4D05.png)
+![process4](appendix.assets/9942063F5B814C4D05.png)
 
 그리고 이렇게 가공된 데이터들은 위에서도 나와있듯이 SimpleChunkProcessor의 `doWrite()` 를 호출하여 일괄 처리 합니다.
 
-![process4](SpringBatch 별첨.assets/99C3D0375B814C4C14.png)
+![process4](appendix.assets/99C3D0375B814C4C14.png)
 
 
 
@@ -270,11 +270,11 @@ Job Parameter를 사용하기 위해선 항상 Spring Batch 전용 Scope를 선�
 
 **JobScope**
 
-![sample-jobscope](SpringBatch 별첨.assets/9997BF4F5B7607502F.png)
+![sample-jobscope](appendix.assets/9997BF4F5B7607502F.png)
 
 **StepScope**
 
-![sample-stepscope](SpringBatch 별첨.assets/9990DC505B76075029.png)
+![sample-stepscope](appendix.assets/9990DC505B76075029.png)
 
 **@JobScope는 Step 선언문에서** 사용 가능하고, **@StepScope는 Tasklet이나 ItemReader, ItemWriter, ItemProcessor**에서 사용할 수 있습니다.
 
@@ -298,7 +298,7 @@ Spring Batch는 `@StepScope`와 `@JobScope` 라는 아주 특별한 Bean Scope�
 아시다시피, **Spring Bean의 기본 Scope는 singleton**인데요.
 그러나 아래처럼 Spring Batch 컴포넌트 (Tasklet, ItemReader, ItemWriter, ItemProcessor 등)에 `@StepScope`를 사용하게 되면
 
-![stepscope1](SpringBatch 별첨.assets/99A2F9475B7607502D.png)
+![stepscope1](appendix.assets/99A2F9475B7607502D.png)
 
 Spring Batch가 Spring 컨테이너를 통해 지정된 **Step의 실행시점에 해당 컴포넌트를 Spring Bean으로 생성**합니다.
 마찬가지로 `@JobScope`는 **Job 실행시점**에 Bean이 생성 됩니다.
@@ -332,23 +332,23 @@ Job과 Step의 코드에서 `@Bean`과 `@Value("#{jobParameters[파라미터명]
 
 > `@Autowired`를 쓰셔도 됩니다.
 
-![jobparameter1](SpringBatch 별첨.assets/9994B94E5B76075129.png)
+![jobparameter1](appendix.assets/9994B94E5B76075129.png)
 
 그리고 `SimpleJobTasklet`은 아래와 같이 `@Component`와 `@StepScope`로 **Scope가 Step인 Bean**으로 생성합니다.
 이 상태에서 `@Value("#{jobParameters[파라미터명]}`를 Tasklet의 멤버변수로 할당합니다.
 
-![jobparameter2](SpringBatch 별첨.assets/99C0984A5B76075126.png)
+![jobparameter2](appendix.assets/99C0984A5B76075126.png)
 
 이렇게 **메소드의 파라미터로 JobParameter를 할당받지 않고, 클래스의 멤버 변수로 JobParameter를 할당** 받도록 해도 실행해보시면!
 
-![jobparameter3](SpringBatch 별첨.assets/994B8F365B76075126.png)
+![jobparameter3](appendix.assets/994B8F365B76075126.png)
 
 정상적으로 JobParameter를 받아 사용할 수 있습니다.
 이는 **SimpleJobTasklet Bean이 `@StepScope`로 생성**되었기 때문입니다.
 
 반면에, 이 SimpleJobTasklet Bean을 일반 singleton Bean으로 생성할 경우 아래와 같이 `'jobParameters' cannot be found` 에러가 발생합니다.
 
-![jobparameter4](SpringBatch 별첨.assets/99B8343A5B76075127.png)
+![jobparameter4](appendix.assets/99B8343A5B76075127.png)
 
 즉, Bean을 메소드나 클래스 어느 것을 통해서 생성해도 무방하나 Bean의 Scope는 Step이나 Job이어야 한다는 것을 알 수 있습니다.
 
@@ -815,7 +815,7 @@ parameterName='{"value": "parameterValue", "type":"parameterType", "identifying"
 
 
 
-![img](SpringBatch 별첨.assets/img.png)
+![img](appendix.assets/img.png)
 
 
 
