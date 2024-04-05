@@ -55,6 +55,6 @@ Spring Batch 개발 및 클라우드 전개전략
 
   
 
-#  별첨2. appendix ( [문서 보기](./appendix별첨.md) )
+#  별첨2. appendix ( [문서 보기](./appendix.md) )
 
   
