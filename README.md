@@ -26,6 +26,7 @@ Spring Batch 개발 및 클라우드 전개전략
   - Spring Batch 란?
   - Spring Batch 아키텍처
   - Spring Batch 구성요소
+
 - Spring Batch 실습
   - 사전준비
   - 베이스 코드 실행
@@ -36,18 +37,24 @@ Spring Batch 개발 및 클라우드 전개전략
   - Listener
   - Repeat
   - FaultTolerant
-  - Multi-Thread
+
+- Batch 전개 전략
+
+  - 분류
+    - Online
+    - Online-Batch
+    - Batch
+
+  - Cloud 환경에서의 배포 및 실행
+
+  
 
 
-# 3. Batch 전개 전략 ( [문서 보기](./SpringBatch.md) )
 
-- Batch 전략
-  - Online
-  - Online-Batch
-  - Batch
+#  별첨1. MultiThread ( [문서 보기](./MultiThread.md) )
 
+  
 
-
-#  별첨1. SpringBatch 별첨 ( [문서 보기](./SpringBatch별첨.md) )
+#  별첨2. appendix ( [문서 보기](./appendix별첨.md) )
 
   
