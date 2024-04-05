@@ -417,7 +417,7 @@ Job과 JobInstance는 1:M의 관계를 가지면서 BATCH_JOB_INSTANCE 테이블
 
 JOB_INSTANCE_ID에는 각 다른 인스턴스 값이 저장이 되고
 
-JOB_NAME에는 등록된 잡의 이름이 저장이 되고
+JOB_NAME에는 등록된 잡의 이름이 저장이 되며
 
 JOB_KEY에는 Job Parameter를 해싱한 값이 저장이 됩니다. 
 
@@ -1434,7 +1434,7 @@ public class Sample02JobConfiguration {
 ![그림4](SpringBatch.assets/6-4.png)
 위에 Chunk가 두 개 표기되어 있는데 실제로는 한 개만 사용 가능합니다.두가지 방법이 있다 정도로 알아두면 될 것 같습니다.
 
-readerIsTransationalQueue() Deprecated in V5.0
+
 
 
 
@@ -4341,7 +4341,7 @@ retryTemplate을 직접 만들어서 원하는 세팅을 해주고, 만든 retry
 #### 3.1.1.2 Online-Batch
 
 - 항상 기동되어있음(수시작업)
-- API 호출에 의해 Batch Job 지가됨
+- API 호출에 의해 Batch Job 시작됨
 - 웹서버(Tomcat 등)+ Spring Batch
 
 #### 3.1.1.3 Batch
@@ -4359,13 +4359,13 @@ retryTemplate을 직접 만들어서 원하는 세팅을 해주고, 만든 retry
 
 #### 3.1.2.1 CheckPoint 항목별 분류 기준
 
-|                      | Online   | Online Batch | Batch       |
-| :------------------- | -------- | ------------ | ----------- |
-| **Triggering**       | API Call | API Call     | PodOperator |
-| **API Call**         | Yes      | Yes          | No          |
-| **Input Volume**     | <10,000  | >=10,000     | >=10,000    |
-| **Output Volume**    | <10,000  | >=10,000     | >=10,000    |
-| **Sql Result Count** | <100,000 | >=100,000    | >=100,000   |
+|                      | Online    | Online Batch | Batch       |
+| :------------------- | --------- | ------------ | ----------- |
+| **Triggering**       | API Call  | API Call     | PodOperator |
+| **API Call**         | Yes       | Yes          | No          |
+| **Input Volume**     | < 10,000  | >= 10,000    | >= 10,000   |
+| **Output Volume**    | < 10,000  | >= 10,000    | >= 10,000   |
+| **Sql Result Count** | < 100,000 | >= 100,000   | >= 100,000  |
 
 ---
 
@@ -4375,6 +4375,8 @@ retryTemplate을 직접 만들어서 원하는 세팅을 해주고, 만든 retry
 
 #### 3.1.2.1 Example : Online
 
+
+
 **pom.xml dependency 추가**
 
 ```xml
@@ -4383,6 +4385,8 @@ retryTemplate을 직접 만들어서 원하는 세팅을 해주고, 만든 retry
 			<artifactId>spring-boot-starter-web</artifactId>
 		</dependency>
 ```
+
+
 
 **SampleController.java**
 
@@ -4402,6 +4406,8 @@ public class SampleController {
     }
 }
 ```
+
+
 
 **Batch01Application.java**
 
@@ -4476,7 +4482,7 @@ public class SampleController {
 #### 3.1.3.1 Example : Online
 
 ```java
-TODO :  프로세스 그림 추가
+TODO :  교육 중 별도 자료 활용
 ```
 
 
@@ -4484,7 +4490,7 @@ TODO :  프로세스 그림 추가
 #### 3.1.3.2 Example : Online-Batch
 
 ```java
-TODO : 프로세스 그림 추가
+TODO :  교육 중 별도 자료 활용
 ```
 
 
@@ -4492,7 +4498,7 @@ TODO : 프로세스 그림 추가
 #### 3.1.3.3 Example : Batch
 
 ```java
-TODO : 프로세스 그림 추가
+TODO :  교육 중 별도 자료 활용
 ```
 
 

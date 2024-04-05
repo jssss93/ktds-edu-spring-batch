@@ -14,8 +14,10 @@ Spring Batch 개발 및 클라우드 전개전략
 - JDK17
 - STS
 - Lombok
+- Maven
 - WSL2
 - Mysql WorkBench
+- Docker Desktop
 
 
 # 2. Spring Batch ( [문서 보기](./SpringBatch.md) )
