@@ -51,7 +51,7 @@
 - 사용하려면 Spring-batch-integration 의존성이 필요합니다.
   - implementation ‘org.springframework.batch:spring-batch-integration’
 
-![그림3](별첨.assets/11-3.png) ![그림2](/Users/jongsoo/cjs/git/edu/edu_batch/SpringBatch.assets/11-2.png)
+![a](multiThread.assets/11-3.png) ![그림](multiThread.assets/11-2.png)
 
 - AsyncItemProcessor는 ItemProcessor에 실제 작업을 위임합니다.
 - TaskExecutor로 비동기 실행을 하기 위한 스레드를 만들고 해당 스레드는 FutureTask를 실행합니다.
@@ -60,7 +60,7 @@
 
 
 
-![그림4](/Users/jongsoo/cjs/git/edu/edu_batch/SpringBatch.assets/11-4.png)
+![그림4a](multiThread.assets/11-4.png)
 
 1. Step 기본 설정
 2. 청크 개수 설정
@@ -242,7 +242,7 @@ Customer 데이터를 프로세서에서 Customer2객체로 전환하여 Writer�
 
 #### 2.10.4.1 동작방식
 
-![그림5](/Users/jongsoo/cjs/git/edu/edu_batch/SpringBatch.assets/11-5.png)
+![그림5a](multiThread.assets/11-5.png)
 
 - Step 내에서 멀티 스레드로 Chunk 기반 처리가 이뤄지는 구조 입니다.
 - TaskExecutorRepeatTemplate이 반복자로 사용되며 설정한 개수(throttleLimit)만큼의 스레드를 생성하여 수행합니다.
@@ -367,12 +367,12 @@ public class sample22JobConfiguration {
 
 #### 2.10.5.1 동작방식
 
-![그림6](/Users/jongsoo/cjs/git/edu/edu_batch/SpringBatch.assets/11-6.png)
+![그림6a](multiThread.assets/11-6.png)
 
 - SplitState를 사용해서 여러 개의 Flow들을 병렬적으로 실행하는 구조 입니다.
 - 실행이 다 완료된 후 FlowExecutionStatus 결과들을 취합해서 다음 단계를 결정합니다.
 
-![그림7](/Users/jongsoo/cjs/git/edu/edu_batch/SpringBatch.assets/11-7.png)
+![그림7a](multiThread.assets/11-7.png)
 
 1. flow 1 생성합니다.
 2. flow2와 flow3를 생성하고 앞선 1까지 총 3개의 flow를 합치고 taskExecutor에서는 flow 개수만큼 스레드를 생성해서 각 flow를 실행시킵니다.
@@ -487,13 +487,13 @@ public class sample23JobConfiguration {
 - SlaveStep은 ItemReader / ItemProcessor / ItemWriter 등을 갖고 동작하며 작업을 독립적으로 병렬 처리합니다.
 - MasterStep은 PartitionStep이며 SlaveStep은 TaskletStep, FlowStep 등이 올 수 있습니다.
 
-![그림8](/Users/jongsoo/cjs/git/edu/edu_batch/SpringBatch.assets/11-8.png) MasterStep과 SlaveStep 둘다 Step인데 MasterStep에서 Partitioner가 grid Size만큼 StepExecution을 만들고 partitioner의 방식에 따라 StepExecution의 ExecutionContext 안에 **데이터 자체가 아닌 데이터 정보** 를 넣어둡니다.(예시를 보면 이해가 쉽습니다.) 그리고 gridSize만큼 스레드를 생성하여 SlaveStep을 각 스레드별로 실행합니다.
+![그림8a](multiThread.assets/11-8.png) MasterStep과 SlaveStep 둘다 Step인데 MasterStep에서 Partitioner가 grid Size만큼 StepExecution을 만들고 partitioner의 방식에 따라 StepExecution의 ExecutionContext 안에 **데이터 자체가 아닌 데이터 정보** 를 넣어둡니다.(예시를 보면 이해가 쉽습니다.) 그리고 gridSize만큼 스레드를 생성하여 SlaveStep을 각 스레드별로 실행합니다.
 
-![그림9](/Users/jongsoo/cjs/git/edu/edu_batch/SpringBatch.assets/11-9.png)
+![그림9a](multiThread.assets/11-9.png)
 
 그림을 보면 알 수 있듯이, 각 스레드는 같은 SlaveStep을 실행하지만, 서로 다른 StepExecution 정보를 가지고 수행됩니다. Partitioning은 Scope를 지정하게 되는데 이에 따라 서로 같은 SlaveStep을 수행하게 되어 같은 프록시를 바라보지만 실제 실행할 때는 결과적으로 각 스레드마다 타겟 빈을 새로 만들기 때문에 서로 다른 타겟 빈을 바라보게 되어 동시성 이슈가 없습니다.
 
-![그림10](/Users/jongsoo/cjs/git/edu/edu_batch/SpringBatch.assets/11-10.png)
+![그림10a](multiThread.assets/11-10.png)
 
 1. step 기본 설정
 2. slaveStep에 적용할 Partitioner 설정
@@ -730,7 +730,7 @@ public JpaPagingItemReader<? extends Customer> customItemReader(
 
 ------
 
-![그림11](/Users/jongsoo/cjs/git/edu/edu_batch/SpringBatch.assets/11-11.png)
+![그림11a](multiThread.assets/11-11.png)
 
 
 
