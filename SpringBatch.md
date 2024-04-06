@@ -606,31 +606,31 @@ executionContext.putLong(getKey(LINES_READ_COUNT), reader.getPosition());
 
 `Job`의 개념 설명할 때 예시로 사용한 EndOfDay를 그대로 가져와서, 데이터베이스에서 파일을 읽는 ‘loadData’ step 하나가 있다고 가정해보자. 첫 실행에 실패한 이후의 메타 데이터 테이블은 아래와 같을 것이다:
 
-**Table 9. BATCH_JOB_INSTANCE**
+**BATCH_JOB_INSTANCE**
 
 | JOB_INST_ID |  JOB_NAME   |
 | :---------: | :---------: |
 |      1      | EndOfDayJob |
 
-**Table 10. BATCH_JOB_EXECUTION_PARAMS**
+**BATCH_JOB_EXECUTION_PARAMS**
 
 | JOB_INST_ID | TYPE_CD |   KEY_NAME    |  DATE_VAL  |
 | :---------: | :-----: | :-----------: | :--------: |
 |      1      |  DATE   | schedule.Date | 2017-01-01 |
 
-**Table 11. BATCH_JOB_EXECUTION**
+**BATCH_JOB_EXECUTION**
 
 | JOB_EXEC_ID | JOB_INST_ID |    START_TIME    |     END_TIME     | STATUS |
 | :---------: | :---------: | :--------------: | :--------------: | :----: |
 |      1      |      1      | 2017-01-01 21:00 | 2017-01-01 21:30 | FAILED |
 
-**Table 12. BATCH_STEP_EXECUTION**
+**BATCH_STEP_EXECUTION**
 
 | STEP_EXEC_ID | JOB_EXEC_ID | STEP_NAME |    START_TIME    |     END_TIME     | STATUS |
 | :----------: | :---------: | :-------: | :--------------: | :--------------: | :----- |
 |      1       |      1      | loadData  | 2017-01-01 21:00 | 2017-01-01 21:30 | FAILED |
 
-**Table 13. BATCH_STEP_EXECUTION_CONTEXT**
+**BATCH_STEP_EXECUTION_CONTEXT**
 
 | STEP_EXEC_ID |    SHORT_CONTEXT    |
 | :----------: | :-----------------: |
