@@ -9,15 +9,16 @@ Spring Batch 개발 및 클라우드 전개전략
 
 
 # 1. 시작하기전에 ( [문서 보기](./시작전에.md) )
-- Git Bath
+- Git Bash
 - 반디집
-- JDK17
-- STS
-- Lombok
+- Typora
+- JDK17(필수)
+- STS(필수)
+- Lombok(필수)
 - Maven
-- WSL2
+- WSL2(필수)
 - Mysql WorkBench
-- Docker Desktop
+- Docker Desktop(필수)
 
 
 # 2. Spring Batch ( [문서 보기](./SpringBatch.md) )
