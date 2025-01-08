@@ -1,5 +1,5 @@
 package com.example.batch_01.online_batch01;
-
+/*
 import lombok.RequiredArgsConstructor;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.JobExecutionException;
@@ -36,3 +36,4 @@ public class SampleController {
         return "";
     }
 }
+*/

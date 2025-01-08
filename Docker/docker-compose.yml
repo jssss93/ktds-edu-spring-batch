@@ -1,13 +1,30 @@
-version: '3.1'
+version: '3.8'
+
 services:
   db:
-    image: mysql:5.7
-    platform: linux/amd64
-    container_name: db
-    environment:
-      - MYSQL_ROOT_PASSWORD=password
-    ports:
-      - 3333:3306
-    volumes:
-      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+    image: mysql:8.0
+    container_name: mysql_db
     restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword    # root 계정 비밀번호
+      MYSQL_DATABASE: myapp                # 초기 데이터베이스 이름
+      MYSQL_USER: user                     # 새로 생성할 사용자
+      MYSQL_PASSWORD: userpassword         # 사용자 비밀번호
+    ports:
+      - "3333:3306"                       # 호스트:컨테이너 포트 매핑
+    volumes:
+      - mysql_data:/var/lib/mysql         # 데이터 영속성을 위한 볼륨
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+    command:
+      - --character-set-server=utf8mb4
+      - --collation-server=utf8mb4_unicode_ci
+    networks:
+      - mysql_network
+
+volumes:
+  mysql_data:
+    driver: local
+
+networks:
+  mysql_network:
+    driver: bridge
