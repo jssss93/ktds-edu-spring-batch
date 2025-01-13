@@ -3331,6 +3331,52 @@ public class SkippableException extends RuntimeException {
     }
 }
 
+---
+itemReader : 1
+itemReader : 2
+itemReader : 3
+itemReader : 4
+itemReader : 5
+1 repeat
+1 repeat
+1 repeat
+2 repeat
+2 repeat
+2 repeat
+3 repeat
+3 repeat
+3 repeat
+4 repeat
+4 repeat
+4 repeat
+5 repeat
+5 repeat
+5 repeat
+items = [items=[1, 2, 3, 4, 5], skips=[]]
+itemReader : 6
+itemReader : 7
+itemReader : 8
+itemReader : 9
+itemReader : 10
+6 repeat
+6 repeat
+6 repeat
+7 repeat
+7 repeat
+7 repeat
+8 repeat
+8 repeat
+8 repeat
+9 repeat
+9 repeat
+9 repeat
+10 repeat
+10 repeat
+10 repeat
+items = [items=[6, 7, 8, 9, 10], skips=[]]
+2025-01-13T21:58:05.857+09:00 ERROR 5122 --- [           main] o.s.batch.core.step.AbstractStep         : Encountered an error executing step sample12_step01 in job sample12
+
+com.example.batch_01.sample13.CustomException: skip exception
 ```
 
 
