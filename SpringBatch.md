@@ -1503,7 +1503,7 @@ public class Sample02JobConfiguration {
 - **데이터를 출력하기 전에 데이터를 가공 및 필터링 역할을 하는 인터페이스** 입니다.
 - ItemReader 및 ItemWriter와 분리되어 비즈니스 로직을 구현할 수 있습니다.
 - ItemReader로부터 받은 아이템을 특정 타입으로 변환해서 ItemWriter에 넘겨 줄 수 있습니다.
-- Itemreader로부터 받은 아이템들 중 필터과정을 거쳐서 원하는 아이템들만 ItemWriter로 넘겨줄 수 있습니다.
+- ItemReader로부터 받은 아이템들 중 필터과정을 거쳐서 원하는 아이템들만 ItemWriter로 넘겨줄 수 있습니다.
 - ChunkOrientedTasklet 실행 시 선택적 요소기 때문에 필수 요소는 아닙니다.
 - O process()
   - I 제네릭은 ItemReader에서 받을 데이터 타입
@@ -1733,7 +1733,7 @@ FlowJob은 조건에 따라 분기되어 실행되는데 그에 대한 조건으
 
 #### 2.6.1.2 Batch Status
 
-Batch Status는 JobExecution과 StepExecution의 속성으로 Job과 Step의 실행 상태를 나타냅니다.
+Batch Status는 JobExecution과 StepExecution의 속성으로 **Job과 Step의 실행 상태**를 나타냅니다.
 COMPLETED, STARTING, STARTED, STOPPING, STOPPED, FAILED, ABANDONED, UNKNOWN 총 8 종류의 **ENUM값** 이 있습니다.
 ABANDONED와 FAILED와의 차이점은 FAILED는 실패 후 재실행 시 재시작이 되지만, ABANDONED는 재실행 시 건너뜁니다.
 
@@ -1748,7 +1748,7 @@ ABANDONED와 FAILED와의 차이점은 FAILED는 실패 후 재실행 시 재시
 
 #### 2.6.1.3 ExitStatus
 
-JobExecution과 StepExecution의 속성으로 Job과 Step의 실행 후 종료되는 상태를 나타냅니다.
+JobExecution과 StepExecution의 속성으로 **Job과 Step의 실행 후 종료되는 상태**를 나타냅니다.
 **기본적으로 ExitStatus는 BatchStatus와 동일한 값으로 설정됩니다.**
 임의의 값으로 다르게 설정할 수도 있습니다.
 
@@ -1762,7 +1762,7 @@ JobExecution과 StepExecution의 속성으로 Job과 Step의 실행 후 종료�
 
 #### 2.6.1.4 FlowExecutionStatus
 
-- FlowExecution의 속성으로 Flow의 실행 후 최종 결과 상태를 나타냅니다.
+- FlowExecution의 속성으로 **Flow의 실행 후 최종 결과 상태**를 나타냅니다.
 - Flow 내 Step이 실행되고 ExitStatus값을 FlowExecutionStatus값으로 저장하게 됩니다.
 - FlowJob의 BatchStatus에 관여합니다.
 - COMPLETED, STOPPED, FAILED, UNKNOWN 의 상태가 있습니다.
@@ -1874,6 +1874,8 @@ public class Sample_04_JobConfiguration {
                 .incrementer(new RunIdIncrementer())
                 .build();
     }
+  
+  
     @Bean
     public Step sample04_step1(JobRepository jobRepository, PlatformTransactionManager transactionManager) {
         return new StepBuilder("sample04_step1",jobRepository)
@@ -2167,7 +2169,7 @@ public class Sample_05_JobConfigureation {
     @Bean
     public Job sample05() {
             return new JobBuilder("sample05", jobRepository)
-                    .incrementer(new RunIdIncrementer())
+                .incrementer(new RunIdIncrementer())
                 .start(step())
                 .next(decider()) // step이 완료되면 decider를 실행
                     // decider의 반환값에 따른 분기
@@ -2585,7 +2587,7 @@ Scope는 스프링 컨테이너에서 빈이 관리되는 범위를 의미합니
 **StepScope**
 
 - Tasklet이나 ItemReader, ItemWriter, ItemProcessor 선언문에 붙입니다.
-- @Value로 JobParameter, JobExecutionContext, StepExecutionContet 사용 가능합니다.
+- @Value로 JobParameter, JobExecutionContext, StepExecutionContext 사용 가능합니다.
 
 
 
