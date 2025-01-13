@@ -2820,7 +2820,8 @@ public class CustomJobExecutionListener implements JobExecutionListener {
         String jobName = jobExecution.getJobInstance().getJobName();
         long startTime = jobExecution.getStartTime().atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
         long endTime = jobExecution.getEndTime().atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
-        long executionTime = TimeUnit.MILLISECONDS.toMinutes(endTime - startTime);
+        //long executionTime = TimeUnit.MILLISECONDS.toMinutes(endTime - startTime);
+        long executionTime = endTime - startTime;
         System.out.println("job name : " + jobName  + " end : "+ " execution time : "+executionTime+"s");
     }
 }
